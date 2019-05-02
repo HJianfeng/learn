@@ -290,3 +290,33 @@ keep-alive是 Vue 内置的一个组件，可以使被包含的组件保留状�
 - transition 属性，实现路由切换时的过渡动效。
 - validate 方法，校验动态路由参数的有效性。
 - watchQuery 属性 ，监听参数字符串更改并在更改时执行组件方法
+
+#### ES6新特性
+- ES6箭头函数
+- const 与 let 变量
+- 模板字面量：模板字面量用倒引号 ( `` )
+    ```javascript
+    `please see ${student.name}`
+    ```
+- 解构：es6可以使用解构从数组和对象提取值并赋值给独特的变量
+    ```javascript
+    const point = [10, 25, -34];
+    const [x, y, z] = point;
+    ```
+- 对象字面量简写法：对象的属性名称和变量名称一样，那么就可以从对象属性中删掉这些重复的变量名称。
+    ```
+    let type = 'quartz';
+    let color = 'rose';
+    let carat = 21.29;
+    const gemstone = {type,color,carat};
+    ```
+- for...of循环
+- 展开运算符：...
+
+#### express中间件执行顺序和koa中间件
+- Express的中间件是顺序执行
+- Koa是从第一个中间件开始执行,遇到 await next() 就进入下一个中间件，一直到执行到最后一个中间件。然后再逆序执行上一个中间件  await next() 后面的代码，一直到第一个中间件 await next() 后面的代码执行完毕才发出响应。
+
+#### HTTP返回码中301与302的区别
+- 301 redirect: 301 代表永久性转移(Permanently Moved)。
+- 302 redirect: 302 代表暂时性转移(Temporarily Moved )。 
