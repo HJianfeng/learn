@@ -319,4 +319,78 @@ keep-alive是 Vue 内置的一个组件，可以使被包含的组件保留状�
 
 #### HTTP返回码中301与302的区别
 - 301 redirect: 301 代表永久性转移(Permanently Moved)。
-- 302 redirect: 302 代表暂时性转移(Temporarily Moved )。 
+- 302 redirect: 302 代表暂时性转移(Temporarily Moved )。
+
+
+## angular题库
+
+#### 1.请解释Angular 2应用程序的生命周期hooks是什么？
+Angular 2组件/指令具有生命周期事件，是由@angular/core管理的。
+- ngOnChanges：当指令的任何一个可绑定属性发生变化时调用
+- ngOnInit：它会在 Angular 初始化完了该指令的所有数据绑定属性之后调用
+- ngDoCheck：检测并在Angular上下文发生变化时执行
+- ngOnDestroy：Angular 每次销毁指令/组件之前调用并清扫
+- ngAfterViewInit：Angular创建组件的视图后。
+- ngAfterViewChecked：Angular 做完组件视图和子视图的变更检测之后调用。
+
+#### 2.使用Angular 2，和使用Angular 1相比，有什么优势？
+- 更好的速度和性能
+- 更简单的依赖注入
+- 模块化，跨平台
+- 具备ES6和Typescript的好处。
+- 灵活的路由，具备延迟加载功能
+
+#### 3.Angular 2中的路由工作原理是什么？
+Angular应用程序具有路由器服务的单个实例，并且每当URL改变时，相应的路由就与路由配置数组进行匹配。在成功匹配时，它会应用重定向，此时路由器会构建ActivatedRoute对象的树，同时包含路由器的当前状态。
+
+#### 4.什么是事件发射器？它是如何在Angular 2中工作的？
+ EventEmitter是在@ angular/core模块中定义的类，由组件和指令使用，用来发出自定义事件。  
+ 可以通过模块的任何一个组件，使用订阅subscribe方法来实现事件发射的订阅。emit方法来发出事件
+
+#### 5.如何在Angular 2应用程序中使用codelyzer？
+用于运行和检查是否遵循了预定义的编码准则。Codelyzer仅对Angular和TypeScript项目进行静态代码分析。  
+
+
+Codelyzer运行在tslint的顶部，其编码约定通常在tslint.json文件中定义。Codelyzer可以直接通过Angularcli或npm运行。像Visual Studio Code和Atom这样的编辑器也支持codelyzer，只需要通过做一个基本的设置就能实现。
+
+#### 6. 什么是延迟加载？如何在Angular 2中启用延迟加载？
+
+大多数企业应用程序包含用各式各样的用于特定业务案例的模块。捆绑整个应用程序代码并完成加载，会在初始调用时，产生巨大的性能开销。延迟加载使我们只加载用户正在交互的模块，而其余的模块会在运行时按需加载。
+
+#### 7. 在Angular 2应用中，我们应该注意哪些安全威胁？
+1. 避免为你的组件使用/注入动态HTML内容。
+2. 不要将外部网址放在应用程序中，除非它是受信任的。
+3. 避免网址重定向，除非它是可信的。
+4. 考虑使用AOT编译或离线编译。
+5. 通过限制api，选择使用已知或安全环境/浏览器的app来防止XSRF攻击。
+
+#### 8. 如何优化Angular 2应用程序来获得更好的性能？
+1. 考虑AOT编译。
+2. 确保应用程序已经经过了捆绑，uglify和tree shaking。
+3. 确保应用程序不存在不必要的import语句。
+4. 确保应用中已经移除了不使用的第三方库。
+5. 所有dependencies 和dev-dependencies都是明确分离的。
+6. 如果应用程序较大时，我会考虑延迟加载而不是完全捆绑的应用程序。
+
+#### 什么是AOT编译？它有什么优缺点？
+AOT编译代表的是预先编译Ahead Of Time编译，其中Angular编译器在构建时，会将Angular组件和模板编译为本机JavaScript和HTML。编译好的HTML和JavaScript将会部署到Web服务器，以便浏览器可以节省编译和渲染时间。
+
+#### Observables和Promises的核心区别是什么？
+Promises  
+ 1. 返回单个值
+ 2. 不可取消  
+
+Observables
+ 1. 可以使用多个值
+ 2. 可取消
+ 3. 支持map，filter，reduce和类似的操作符
+ 4. ES 2016提议的功能
+ 5. 使用反应式扩展（RxJS）
+ 6. 根据时间的变化，数组成员可以异步获取
+
+#### angular的数据绑定采用什么机制？详述原理
+脏检查机制。  
+
+双向数据绑定是 AngularJS 的核心机制之一。当 view 中有任何数据变化时，会更新到 model ，当 model 中数据有变化时，view 也会同步更新，显然，这需要一个监控。  
+
+原理就是，Angular 在 scope 模型上设置了一个监听队列，用来监听数据变化并更新 view 。每次绑定一个东西到 view 上时 AngularJS 就会往 $watch 队列里插入一条 $watch ，用来检测它监视的 model 里是否有变化的东西。当浏览器接收到可以被 angular context 处理的事件时，$digest 循环就会触发，遍历所有的 $watch ，最后更新 dom。
