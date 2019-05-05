@@ -366,9 +366,9 @@ Codelyzer运行在tslint的顶部，其编码约定通常在tslint.json文件中
 
 #### 8. 如何优化Angular 2应用程序来获得更好的性能？
 1. 考虑AOT编译。
-2. 确保应用程序已经经过了捆绑，uglify和tree shaking。
-3. 确保应用程序不存在不必要的import语句。
-4. 确保应用中已经移除了不使用的第三方库。
+2. 应用程序经过了捆绑，uglify和tree shaking。
+3. 去除不存在不必要的import语句。
+4. 移除不使用的第三方库。
 5. 所有dependencies 和dev-dependencies都是明确分离的。
 6. 如果应用程序较大时，我会考虑延迟加载而不是完全捆绑的应用程序。
 
@@ -376,21 +376,98 @@ Codelyzer运行在tslint的顶部，其编码约定通常在tslint.json文件中
 AOT编译代表的是预先编译Ahead Of Time编译，其中Angular编译器在构建时，会将Angular组件和模板编译为本机JavaScript和HTML。编译好的HTML和JavaScript将会部署到Web服务器，以便浏览器可以节省编译和渲染时间。
 
 #### Observables和Promises的核心区别是什么？
-Promises  
- 1. 返回单个值
- 2. 不可取消  
-
-Observables
- 1. 可以使用多个值
- 2. 可取消
- 3. 支持map，filter，reduce和类似的操作符
- 4. ES 2016提议的功能
- 5. 使用反应式扩展（RxJS）
- 6. 根据时间的变化，数组成员可以异步获取
+ 1. Promise本质上也是一个Observable，能使用fromPromise把Promise转成Observable
+ 2. 但是Promise .then()只能返回一个值，Observable可以返回多个值
+ 3. Promise要么resolve要么reject，并且只响应一次。而Observable可以响应多次
+ 4. Promise不能取消，Observable可以调用unsubscribe()取消订阅
 
 #### angular的数据绑定采用什么机制？详述原理
 脏检查机制。  
 
 双向数据绑定是 AngularJS 的核心机制之一。当 view 中有任何数据变化时，会更新到 model ，当 model 中数据有变化时，view 也会同步更新，显然，这需要一个监控。  
 
-原理就是，Angular 在 scope 模型上设置了一个监听队列，用来监听数据变化并更新 view 。每次绑定一个东西到 view 上时 AngularJS 就会往 $watch 队列里插入一条 $watch ，用来检测它监视的 model 里是否有变化的东西。当浏览器接收到可以被 angular context 处理的事件时，$digest 循环就会触发，遍历所有的 $watch ，最后更新 dom。
+原理就是，Angular 在 scope 模型上设置了一个监听队列，用来监听数据变化并更新 view 。每次绑定一个东西到 view 上时 AngularJS 就会往监听队列里插入一条 $watch ，用来检测它监视的 model 里是否有变化的东西。当浏览器接收到可以被 angular context 处理的事件时，$digest 循环就会触发，遍历所有的 $watch ，最后更新 dom。
+
+## rxjs
+是一个基于可观测数据流在异步编程应用中的库。  
+
+Rxjs是观察者 + 迭代器模式的结合，Observable作为被观察者，是一个值或事件的流集合。就像是一个序列，裡面的元素会随着时间推送。
+```javascript
+var source = Rx.Observable.create(function(observer){
+  try {
+    observer.next(1)
+    observer.next(2)
+    observer.next(3)
+    setTimeout(() => {
+		observer.next('RxJS 30 days!');
+	}, 2000)
+    //throw 'some exception'
+    //observer.complete()
+  }catch(e){
+    observer.error(e)
+  }
+});
+var observer = {
+  next: (val) => console.log(val),
+  error: () => console.log('出错啦'),
+  complete: () => console.log('完成'),
+}
+var subscribe = source.subscribe(observer);
+var timer = setTimeout(()=>{
+  subscribe.unsubscribe();
+  console.log('取消订阅')
+},2000)
+```
+#### Observable解决的问题
+- 同步和异步的统一
+- 可组合的数据变更过程
+- 数据和视图的精确绑定
+- 条件变更之后的自动重新计算
+
+#### Operator —— 操作符
+- zip：在所有 observables 发出后，将它们的值作为数组发出
+- from：将数组、promise 或迭代器转换成 observable 。
+- range：依次发出给定区间内的数字。
+  ```javascript
+  const source = Rx.Observable.range(0, 3);
+  source.subscribe((val) => {
+    console.log(val)   // 0   1   2
+  })
+  ```
+- of：按顺序发出任意数量的值
+  ```javascript
+  const source = Rx.Observable.of(1,2,3);
+  source.subscribe((val) => {
+    console.log(val)   // 1   2   3
+  })
+  ```
+- forkJoin：并行运行所有可观察序列(Observables)并收集它们的最后元素。
+  ```javascript
+  var source = Rx.Observable.forkJoin(
+      Rx.Observable.of(1, 2, 3),
+      Rx.Observable.range(0, 10),
+    );
+    var subscription = source.subscribe(
+      x => console.log(`onNext: ${x}`),
+      e => console.log(`onError: ${e}`),
+      () => console.log('onCompleted')
+    );
+    // onNext: 3,9
+　  // onCompleted
+  ```
+  - concat：按照顺序，前一个 observable 完成了再订阅下一个 observable 并发出值
+  ```javascript
+  var source1 = Rx.Observable.return(42);
+  var source2 = Rx.Observable.return(56);
+
+  var source = Rx.Observable.concat(source1, source2);
+
+  var subscription = source.subscribe(
+    x => console.log(`onNext: ${x}`),
+    e => console.log(`onError: ${e}`),
+    () => console.log('onCompleted')
+  );
+  // => onNext: 42
+  // => onNext: 56
+  // => onCompleted
+  ```
