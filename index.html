@@ -5,40 +5,35 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>Document</title>
-<style>
-.box{
-  display: flex;
-  display: -webkit-flex;
-}
-.left {
-  flex: 1;
-  background:red;
-}
-.right {
-  flex: 0 1 100px;
-  background:#fe3;
-}
-</style>
 </head>
 <body>
-
-<div class="box">
-  <div class="left">
-  left
-  </div>
-  <div class="right">
-  right
-  </div>
-</div>
+<button id="btn">btn</button>
 
 <script type="text/javascript">
-function Person(name) {
-    this.name = name
-    return name;
+class MyImage {
+  constructor() {
+    this.img = new Image()
+    document.body.appendChild(this.img)
+  }
+
+  setSrc(src) {
+    this.img.src = src
+  }
 }
-let p = new Person('Tom');
-var obj = []
-console.log(typeof obj )
+
+class ProxyImg {
+  constructor() {
+    this.proxyImage = new Image()
+  }
+  setSrc(src) {
+    let myImageObj = new MyImage()
+    myImageObj.img.src = 'file://xxx.png'
+    this.proxyImage.src = src
+    this.proxyImage.onload = function() {
+      myImageObj.img.src = src
+    }
+  }
+}
 </script>
 </body>
 </html>

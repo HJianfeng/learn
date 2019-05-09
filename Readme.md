@@ -102,7 +102,7 @@ function handle() {
 window.addEventListener('scroll', debounce(handle, 1000));
 ```
 - 函数节流（throttle）：是让一个函数无法在很短的时间间隔内连续调用，当上一次执行完之后过了规定的时间间隔，才能进行下一次的函数调用。（所谓节流，就是指连续触发事件但是在N秒中只执行一次函数）节流会稀释函数的执行频率。
-```
+```javascript
 
 var throttle = function(func, delay) {
     var timer = null;
@@ -122,6 +122,26 @@ function handle() {
 }
 window.addEventListener('scroll', throttle(handle, 1000));
 ```
+
+## React 题目
+
+#### React 生命周期
+一、初始化阶段   
+- constructor  初始化状态
+- componentWillMount  组件即将被渲染到页面之前触发
+- render 组件渲染
+- componentDidMount 渲染后触发
+
+二、运行中阶段  
+- componentWillReceiveProps   组件接收到属性时触发
+- shouldComponentUpdate   当组件接收到新属性，组件的状态发生改变时触发。组件首次渲染时并不会触发
+- componentWillUpdate  组件即将被更新时触发
+- componentDidUpdate  组件被更新后触发
+
+三、销毁阶段  
+- componentWillUnmount 组件被销毁时触发
+
+
 #### React数据获取为什么一定要在componentDidMount里面调用？
 - constructor
 - componentWillMount
@@ -138,6 +158,13 @@ window.addEventListener('scroll', throttle(handle, 1000));
 #### 你是怎样调试 React 代码问题的，你用哪些工具？
 除了使用linter（eslint，jslint)外，还可以使用调试工具（React Developer Tools）来打断点
 
+#### React 中 setState 什么时候是同步的，什么时候是异步的？
+在 React 中，如果是由 React 引发的事件处理（比如通过 onClick 引发的事件处理），调用 setState 不会同步更新 this.state  
+除此之外的 setState 调用会同步执行 this.state  
+
+#### setState 异步更新
+setState 通过一个队列机制来实现 state 更新，当执行 setState() 时，会将需要更新的 state 浅合并后放入 状态队列，而不会立即更新 state，队列机制可以高效的批量更新 state。
+
 ####  promise, async/await, Generator函数 这三都实现异步的方案及区别吗？
 - Promise主要为了解决回调地狱的问题（优雅的异步回调解决方案），他是一个对象，使用链式的写法来实现同步异步操作
 - async/await这是一个用同步的思维来解决异步问题的方案。
@@ -152,7 +179,7 @@ window.addEventListener('scroll', throttle(handle, 1000));
 
 #### Vue实现数据双向绑定的原理：
 采用数据劫持结合发布者-订阅者模式的方式，通过Object.defineProperty（）来劫持各个属性的setter，getter
-```
+```javascript
 <body>
 <div id="app">
     <input type="text" id="txt">
@@ -201,10 +228,6 @@ JS内存空间分为栈(stack)、堆(heap)、池(一般也会归类为栈中)。
 
 #### let 与 var 的区别
 通过var定义的变量，作用域是整个封闭函数，是全域的 。通过let定义的变量，作用域是在块级或是子块中。
-
-#### 第 18 题：React 中 setState 什么时候是同步的，什么时候是异步的？
-在 React 中，如果是由 React 引发的事件处理（比如通过 onClick 引发的事件处理），调用 setState 不会同步更新 this.state  
-除此之外的 setState 调用会同步执行 this.state  
 
 ## Vue 相关面试题
 
