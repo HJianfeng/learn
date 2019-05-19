@@ -5,34 +5,43 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>Document</title>
+<style>
+.fly-item,
+.fly-item > div {
+    transition: transform .5s;
+}
+.fly-item {
+    transition-timing-function: linear;
+}
+.fly-item > div {
+    width: 50px;
+    height: 50px;
+    background: red;
+    border-radius: 100%;
+    transition-timing-function: cubic-bezier(.55,0,.85,.36);
+}
+.sanjiao{
+  width: 0;
+  height: 0;
+  border-left: 50px solid transparent;
+  border-right: 50px solid transparent;
+  border-top: 50px solid red;
+  border-bottom: 50px solid transparent;
+}
+</style>
 </head>
 <body>
-<button id="btn">btn</button>
+<div class="fly-item" id="flyItem">
+  <div id="flyItemDiv"></div>
+</div>
+
+<div class="sanjiao"></div>
 
 <script type="text/javascript">
-class MyImage {
-  constructor() {
-    this.img = new Image()
-    document.body.appendChild(this.img)
-  }
-
-  setSrc(src) {
-    this.img.src = src
-  }
-}
-
-class ProxyImg {
-  constructor() {
-    this.proxyImage = new Image()
-  }
-  setSrc(src) {
-    let myImageObj = new MyImage()
-    myImageObj.img.src = 'file://xxx.png'
-    this.proxyImage.src = src
-    this.proxyImage.onload = function() {
-      myImageObj.img.src = src
-    }
-  }
+var array = [1,2,3,3,4,5,6,6]
+var set = new Set(array);
+for(let value of set) {
+  console.log(value)
 }
 </script>
 </body>

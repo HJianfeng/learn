@@ -37,7 +37,7 @@ for (var index in myArray) {}
 #### 5.css两列布局，右列定宽，左列自适应。
 ```html
 <style>
-.box{
+.box {
   display: flex;
   display: -webkit-flex;
 }
@@ -494,3 +494,24 @@ var timer = setTimeout(()=>{
   // => onNext: 56
   // => onCompleted
   ```
+
+## 基础
+
+#### express的核心是什么
+路由，中间件，视图引擎
+
+#### css优先级
+1. 类型选择器：标签选择器和伪元素
+2. 类选择器
+3. id选择器
+4. 内联样式
+5. !important
+
+#### css3有什么新特性
+比较重要的就是加入了动画，媒体查询
+
+#### 抛物线动画怎么做
+两个盒子，水平垂直分解，用transition分别控制两个盒子，一个x轴，一个y轴
+
+#### 实现一个奇偶数不同样式的表格？
+css3 nth-child(n)
