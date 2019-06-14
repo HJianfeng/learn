@@ -5,44 +5,26 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta http-equiv="X-UA-Compatible" content="ie=edge">
 <title>Document</title>
-<style>
-.fly-item,
-.fly-item > div {
-    transition: transform .5s;
-}
-.fly-item {
-    transition-timing-function: linear;
-}
-.fly-item > div {
-    width: 50px;
-    height: 50px;
-    background: red;
-    border-radius: 100%;
-    transition-timing-function: cubic-bezier(.55,0,.85,.36);
-}
-.sanjiao{
-  width: 0;
-  height: 0;
-  border-left: 50px solid transparent;
-  border-right: 50px solid transparent;
-  border-top: 50px solid red;
-  border-bottom: 50px solid transparent;
-}
-</style>
 </head>
 <body>
-<div class="fly-item" id="flyItem">
-  <div id="flyItemDiv"></div>
-</div>
 
-<div class="sanjiao"></div>
 
 <script type="text/javascript">
-var array = [1,2,3,3,4,5,6,6]
-var set = new Set(array);
-for(let value of set) {
-  console.log(value)
+function returnWeekday(){
+    let string = "今天是星期";
+    let date = new Date().getDay();
+    // 使用数组
+    let dateArr = ['天','一','二','三','四','五','六'];
+    return string + dateArr[date]
 }
+
+const week = returnWeekday()
+console.log(week)
+
+
+git checkout dev
+git merge dev
+git push
 </script>
 </body>
 </html>

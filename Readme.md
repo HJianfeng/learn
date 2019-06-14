@@ -515,3 +515,22 @@ var timer = setTimeout(()=>{
 
 #### 实现一个奇偶数不同样式的表格？
 css3 nth-child(n)
+
+#### W3C描述的GET和POST的区别
+  1. POST 比 GET 更安全，因为GET参数直接暴露在URL上，POST参数在HTTP消息主体中，而且不会被保存在浏览器历史或 web 服务器日志中。  
+  2. 对参数的数据类型，GET只接受ASCII字符，而POST没有限制，允许二进制。  
+  3. GET在浏览器回退/刷新时是无害的，而POST会再次提交请求。  
+  4.  GET请求只能进行url编码(application/x-www-form-urlencoded)，而POST支持多种编码方式(application/x-www-form-urlencoded 或 multipart/form-data)，可以为二进制使用多重编码。  
+  5. 对参数数据长度的限制，GET方法URL的长度是受限制的，最大是2048个字符，POST参数数据是没有限制的。  
+  6. GET请求会被浏览器主动缓存，POST不会，除非手动设置。  
+  7. GET请求参数会被完整保留在浏览器历史记录里，而POST中的参数不会被保留。  
+  8. GET请求可被收藏为书签，POST不能。
+
+#### POST默认的数据使用什么方式?
+form表单，application/x-www-form-urlencoded
+
+#### 彩色图片利用js或css实现黑白
+filter: grayscale(100%);
+
+#### webpack的核心是什么
+入口(entry)、输出(output)、loader、插件(plugins)
