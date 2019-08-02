@@ -534,3 +534,5 @@ filter: grayscale(100%);
 
 #### webpack的核心是什么
 入口(entry)、输出(output)、loader、插件(plugins)
+
+#### 解释一下函数声明和函数表达式的区别
