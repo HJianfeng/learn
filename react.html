@@ -7,8 +7,31 @@
     <title>Document</title>
 </head>
 <body>
-<script>
-
+<script type="text/javascript">
+    function normalizeClass(classValue) {
+        // res 是最终要返回的类名字符串
+        let res = ''
+        if (typeof classValue === 'string') {
+        res = classValue
+        } else if (Array.isArray(classValue)) {
+        for (let i = 0; i < classValue.length; i++) {
+            res += normalizeClass(classValue[i]) + ' '
+        }
+        } else if (typeof classValue === 'object') {
+        for (const name in classValue) {
+            if (classValue[name]) {
+            res += name + ' '
+            }
+        }
+        }
+        return res.trim()
+    }
+    const className = [
+        'class-a',
+        ['class-b', 'class-c']
+    ]
+    const res = normalizeClass(className)
+    console.log(res)
 </script>
 </body>
 </html>
