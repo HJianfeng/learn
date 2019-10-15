@@ -1,17 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-    <title>Document</title>
-  </head>
-  <body>
-    <ul>
-      控件
-    </ul>
-    <script>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta http-equiv="X-UA-Compatible" content="ie=edge" />
+<title>Document</title>
+</head>
+<body>
+<ul>
+  控件
+</ul>
+<script>
+/*
+  // 虽然A，但是B  A^B
+  // 只要A, 就B   A->B
+  // 因为A, 所以B  A->B
+  // 只有A, 才B   B->A
+  // 除非A, 否则B  -A -> B 或 -B -> A
 
-    </script>
-  </body>
+
+
+  只有当10时   A->B才为假
+*/
+
+let validator = {
+  get: (obj, prop,v) => {
+      console.log('设置 get 操作',v)
+      return obj[prop];
+  },
+  set: (obj, prop, value) => {
+    console.log(prop);
+    if(prop === 'age') {
+      if(!Number.isInteger(value)) {
+        throw new TypeError('The age is not an integer')
+      }
+      if(value > 200) {
+        throw new TypeError('The age is seems invalid')
+      }
+    }
+    obj[prop] = value;
+    return true;
+  }
+};
+
+let p = new Proxy({
+  a: {}
+}, validator);
+
+
+// for (let key of Object.keys(proxy)) {
+//   console.log(target[key]);
+// }
+
+</script> 
+</body>
 </html>

@@ -1,3 +1,4 @@
+# call、apply和bind原理和模拟实现
 ## 前言
 在 javascript 中，call、apply和bind 都是为了改变某个函数运行时的上下文（context）而存在的，换句话说，就是为了改变函数体内部 this 的指向。  
 如果用一句话介绍 call那就是，使用一个指定的 this 值和若干个指定的参数值的前提下调用某个函数或方法。    
