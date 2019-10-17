@@ -82,7 +82,7 @@ p.age = 18 // true
 我们有时候可能会对一个对象的某些属性进行一些限制，比如年龄age，只能是字符串而且不超过 200 岁，当不满足这些要求时我们就可以通过代理抛出错误
 
 ## 二、vue3 数据驱动: reactivity
-10月出的时候，vue3公布了源码，其中数据响应式系统核心就是采用 `Proxy` 代理模式，我们来看看它的源码， `reactivity`的源码位置在`packages`的文件内，
+10月初，vue3公布了源码，其中数据响应式系统核心就是采用 `Proxy` 代理模式，我们来看看它的源码， `reactivity`的源码位置在`packages`的文件内，
 以下是简化后的源码。
 ``` javascript
 // 代码经过删减
@@ -92,7 +92,7 @@ import { mutableHandlers, readonlyHandlers } from './baseHandlers'
 // 创建完 Proxy 后需要把原始数据和 Proxy对象分别保存到这两个Map结构
 const rawToReactive = new WeakMap() // 键是原始数据，值是响应数据
 const reactiveToRaw = new WeakMap() // 键是响应数据，值是原始数据
-
+// targetMap 保存目标对象
 export const targetMap = new WeakMap<any, KeyToDepMap>()
 // entry
 function reactive(target) {
@@ -164,7 +164,7 @@ p.a.c = 1  // get 操作
 function createGetter(isReadonly: boolean) {
   return function get(target: any, key: string | symbol, receiver: any) {
     const res = Reflect.get(target, key, receiver)
-    // 
+    // 依赖函数保存到`targetMap`中
     track(target, OperationTypes.GET, key)
     return isObject(res)
       ? isReadonly
@@ -303,6 +303,13 @@ function run(effect: ReactiveEffect, fn: Function, args: any[]): any {
   }
 }
 ```
+## 三、为什么使用Proxy而不是defineProperty
+1. `defineProperty`只能对对象的属性进行劫持，意味着需要遍历对象对每个属性进行劫持，而`Proxy`可以监听对象而不是属性，所以性能比较高  
+2. `defineProperty`不能监听数组，`Proxy`可以  
+3. `defineProperty`只能监听`get`和`set`，而`Proxy`能拦截13种操作  
+4. 所以我们可以这样认为,`Proxy`是`Object.defineProperty`的全方位加强版  
+
+
 ## 最后
 我们最后把流程再回顾一下，首先通过`createReactiveObject`创建`Proxy`对象，创建完成后把这个`Proxy`对象当作`key`保存在`targetMap`中。当触发`get`方法时调用 `track` 函数，把依赖函数保存到`targetMap`中。触发`set`的时候在调用`trigger`运行回调。
 
