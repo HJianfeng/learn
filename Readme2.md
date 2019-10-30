@@ -26,7 +26,7 @@ bindFoo()
 1. this指向改变  
 2. 函数执行了
 
-改变this指向的一个思路是，我们可以把函数挂载到一个对象上，这样这个函数的this就指向了这个对象，但是为了不影响原本的对象，在我们执行完函数后需要使用```delete```删除挂载在这个对象的函数。  
+改变this指向的一个思路是，我们可以把函数挂载到一个对象上，这样这个函数的this就指向了这个对象，但是为了不影响原本的对象，在我们执行完函数后需要使用`delete`删除挂载在这个对象的函数。  
 例子：
 ```javascript
 var foo = {
@@ -44,6 +44,7 @@ delete foo.bar
 3. 删除函数：delete foo.fn
 
 封装起来，第一版如下：
+
 ```javascript
 // 第一版
 Function.prototype.call2 = function(context) {

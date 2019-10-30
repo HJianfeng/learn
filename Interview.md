@@ -1,7 +1,7 @@
 # 前端基础面试题
 #### 1.CSS实现三角形
 
-```
+```javascript
 <div class="triangle"></div>
 .triangle{
   width:0;
@@ -62,6 +62,7 @@ for (var index in myArray) {}
 ```
 #### 6.cookie，session，token
 - Token用来做身份验证
+
 ```javascript
 以下几点特性会让你在程序中使用基于Token的身份验证
 1.无状态、可扩展
@@ -69,6 +70,7 @@ for (var index in myArray) {}
 3.跨程序调用
 4.安全
  ```
+
 - cookie 是一个非常具体的东西，指的就是浏览器里面能永久存储的一种数据，仅仅是浏览器实现的一种数据存储功能。  
 `cookie由服务器生成，发送给浏览器，浏览器把cookie以kv形式保存到某个目录下的文本文件内，下一次请求同一网站时会把该cookie发送给服务器。由于cookie是存在客户端上的，所以浏览器加入了一些限制确保cookie不会被恶意使用，同时不会占据太多磁盘空间，所以每个域的cookie数量是有限的。`
 - session就是会话  
@@ -105,7 +107,6 @@ window.addEventListener('scroll', debounce(handle, 1000));
 ```
 - 函数节流（throttle）：是让一个函数无法在很短的时间间隔内连续调用，当上一次执行完之后过了规定的时间间隔，才能进行下一次的函数调用。（所谓节流，就是指连续触发事件但是在N秒中只执行一次函数）节流会稀释函数的执行频率。
 ```javascript
-
 var throttle = function(func, delay) {
     var timer = null;
     return function() {
