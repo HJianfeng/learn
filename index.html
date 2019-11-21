@@ -11,26 +11,14 @@
   控件
 </ul>
 <script>
-
-/**
- * @param {number[]} nums
- * @return {number}
- * 斐波那契数列
-*/
-var singleNumber = function(n) {
-  if(n === 1 || n === 2)  return 1;
-  const arr = [1, 1];
-  for (let i = 2; i <= n; i++) {
-    arr[i] = arr[i-1] + arr[i-2]
-  }
-  return arr[n-1];
-};
-/**
- * 1块、4块、5块，求总数n块的最小硬币数
-*/
-var yun = function (n) {
-  let num = 0;
-}
+var resolvePromise;
+const promise = new Promise(function promiseExecutor(resolve) {
+  resolvePromise = resolve;
+});
+promise.then(function() {
+  console.log('promise');
+})
+resolvePromise()
 </script> 
 </body>
 </html>
