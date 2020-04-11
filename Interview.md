@@ -539,3 +539,6 @@ filter: grayscale(100%);
 入口(entry)、输出(output)、loader、插件(plugins)
 
 #### 解释一下函数声明和函数表达式的区别
+
+
+#### VUE DOM渲染的过程中可能有哪些情况会阻塞渲染

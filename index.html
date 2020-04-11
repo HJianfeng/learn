@@ -7,18 +7,189 @@
 <title>Document</title>
 </head>
 <body>
-<ul>
-  控件
-</ul>
+<input id="uploads" type="file" />
 <script>
-var resolvePromise;
-const promise = new Promise(function promiseExecutor(resolve) {
-  resolvePromise = resolve;
-});
-promise.then(function() {
-  console.log('promise');
-})
-resolvePromise()
+function debounce(fn, wait) {
+  let timer;
+  
+  return function () {
+    let context = this;
+    if(timer) {
+      clearTimeout(timer)
+    }
+    timer = setTimeout(()=>{
+      fn.apply(context,arguments)
+    },wait)
+  }
+}
+function throttle(fn, wait) {
+  let timer = null;
+  return function () {
+    let context = this;
+    if(!timer) {
+      timer = setTimeout(() => {
+        fn.applay(context, arguments);
+        timer = null;
+      }, wait)        
+    }
+  }
+}
+
+
+
+
+// 1块、4块、5块，求总数n块的最少硬币数
+function getNum(n) {
+  const n1 = 1;
+  const n2 = 4;
+  const n3 = 5;
+  let result = n;
+  // 循环各个块数最大能选择的个数，然后判断怎么组合最小
+  for (let i = 0; i <= n; i++) {  // 1块硬币的个数
+        console.log('i:', i);
+    for (let j = 0; j <= n/4; j++) {  // 4块硬币的个数
+        console.log('j:', j);
+      for (let k = 0; k <= n/5; k++) {  // 5块硬币的个数
+        console.log('k:', k);
+        if((n1*i + n2*j + n3*k) === n) {
+          if(i+j+k < result) {
+            result = i+j+k;
+          }
+        }
+      }
+    }
+  }
+  return result;
+}
+
+function fibo(n) {
+  if(n === 0) return 0;
+  var result = [1,1];
+  for (let i = 2; i <= n; i++) {
+    result[i] = result[i-1] + result[i-2];
+  }
+  return result;
+}
+
+fibo(7)
+
+
+const input = document.getElementById('uploads');
+input.addEventListener('change', handleFileChange);
+
+function handleFileChange(e) {
+  const [file] = e.target.files;
+  if(!file) return;
+  handleUpload(file)
+}
+async function handleUpload(files) {
+  if(!files) return;
+  const fileChunkList = createFileChunk(files);
+  const data = fileChunkList.map(({file}, index) => {
+    return {
+      chunk: file,
+      hash: files.name + '-' + index
+    }
+  })
+  await uploadChunks(data, files);
+}
+
+function request({
+  url,
+  method = "post",
+  data,
+  headers = {},
+  requestList
+}) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open(method, url);
+    Object.keys(headers).forEach(key => {
+      xhr.setRequestHeader(key, headers[key]);
+    });
+    xhr.send(data);
+    xhr.onload = e => {
+      resolve({data: e.target.response})
+    }
+  })
+}
+
+function createFileChunk(file, length = 10) {
+  const fileChunkList = [];
+  const chunkSize = Math.ceil(file.size / length);
+  let cur = 0;
+  while(cur < file.size) {
+    fileChunkList.push({file: file.slice(cur, cur + chunkSize)});
+    cur += chunkSize;
+  }
+  return fileChunkList;
+}
+
+async function uploadChunks(data, file) {
+  const requestList = data.map(({ chunk, hash }) => {
+    const formData = new FormData();
+    formData.append('chunk', chunk);
+    formData.append('hash', hash);
+    formData.append('filename', file.name);
+    return { formData }
+  })
+  .map(({ formData }) => {
+    return request({
+      url: 'http://localhost:3000',
+      data: formData
+    })
+  })
+  await Promise.all(requestList);
+  // 合并切片
+  await mergeRequest(file);
+}
+async function mergeRequest(file) {
+  await request({
+    url: 'http://localhost:3000/merge',
+    headers: {
+      "content-type": "application/json"
+    },
+    data: JSON.stringify({
+      filename: file.name
+    })
+  })
+}
+
+
+
+
+function debounce(fn, wait, immediate) {
+  let timer = null;
+  return function() {
+    let args = arguments;
+    let context = this;
+    if(immediate && !timer) {
+      fn.apply(context, args);
+    }
+    if(timer) clearTimeout(timer);
+    timer = setTimeout(()=> {
+      fn.apply(context, args);
+    }, wait)
+  }
+}
+
+function throttle(fn, wait, immediate) {
+  let timer = null;
+
+  return function() {
+    let context = this,
+        args = arguments;
+    if(immediate) {
+      fn.apply(context, args)
+    }
+    if(!timer) {
+      timer = setTimeout(() => {
+        fn.apply(context, args);
+        timer = null;
+      }, wait)
+    }
+  }
+}
 </script> 
 </body>
 </html>
