@@ -11,6 +11,21 @@
   border-bottom:50px solid red;
 }
 ```
+#### BFC
+块级格式化上下文，它是一个独立的渲染区域它规定了内部的Block-level Box如何布局  
+##### BFC触发条件
+1. 根元素，即HTML 元素
+2. float值不为none
+3. overflow值不为visible
+4. display值为inline-block、table-cell、table-caption
+5. position值为absolute或fixed
+##### BFC布局规则
+1. 内部的Box会在垂直方向，一个接一个的放置
+2. 属于同一个BFC的两个相邻box的margin会重叠
+3. BFC的区域不会与float box重叠
+4. BFC就是页面上的一个隔离的独立容器，容器里面的子元素不会影响到外面的元素，反之也如此
+5. 计算BFC的高度时浮动元素也参与计算  
+
 #### 2.数组乱序
 ```javascript
 let arr = ['A','B','C','D','E','F','G','H','I','J'];
@@ -162,8 +177,9 @@ window.addEventListener('scroll', throttle(handle, 1000));
 除了使用linter（eslint，jslint)外，还可以使用调试工具（React Developer Tools）来打断点
 
 #### React 中 setState 什么时候是同步的，什么时候是异步的？
-在 React 中，如果是由 React 引发的事件处理（比如通过 onClick 引发的事件处理），调用 setState 不会同步更新 this.state  
-除此之外的 setState 调用会同步执行 this.state  
+setState本身并不是异步，只是因为react的性能优化机制体现为异步。在react的生命周期函数或者作用域下为异步，在原生的环境下为同步。
+(在 React 中，如果是由 React 引发的事件处理（比如通过 onClick 引发的事件处理），调用 setState 不会同步更新 this.state  
+除此之外的 setState 调用会同步执行 this.state ) 
 
 #### setState 异步更新
 setState 通过一个队列机制来实现 state 更新，当执行 setState() 时，会将需要更新的 state 浅合并后放入 状态队列，而不会立即更新 state，队列机制可以高效的批量更新 state。
@@ -542,3 +558,217 @@ filter: grayscale(100%);
 
 
 #### VUE DOM渲染的过程中可能有哪些情况会阻塞渲染
+
+# JS
+#### Reflect 对象创建目的
+1. 将object对象一些内部的方法，放到Reflect对象上。比如：object.defineProperty  
+2. 修改某些 Object 方法的返回结果，让其变得更合理。  
+    比如： Object.defineProperty(obj, name, desc)在无法定义属性时，会抛出一个错误，而Reflect.defineProperty(obj, name, desc)则会返回false。
+
+3. 让操作对象的编程变为函数式编程  
+```javascript
+// 老写法
+'assign' in Object // true
+ 
+// 新写法
+Reflect.has(Object, 'assign') // true
+```
+4. Reflect 对象的方法与 Proxy 对象的方法一一对应，只要是 Proxy 对象 的方法，就能在 Reflect 对象上找到对应的方法。这就让 Proxy 对象可 以方便地调用对应的 Reflect 方法，完成默认行为，作为修改行为的基础。
+
+#### 聊聊vue中的 keep-alive 的实现原理
+- 获取 keep-alive 包裹着的第一个子组件对象及其组件名
+- 根据设定的 include/exclude（如果有）进行条件匹配,决定是否缓存。不匹配,直接返回组件实例
+- 根据组件 ID 和 tag 生成缓存 Key,并在缓存对象中查找是否已缓存过该组件实例。如果存在,直接取出缓存值并更新该 key 在 this.keys 中的位置(更新 key 的位置是实现 LRU 置换策略的关键)
+- 在 this.cache 对象中存储该组件实例并保存 key 值,之后检查缓存的实例  数量是否超过 max 的设置值,超过则根据 LRU 置换策略删除最近最久未使用的实例（即是下标为 0 的那个 key）
+- 最后组件实例的 keepAlive 属性设置为 true,这个在渲染和执行被包裹组件的钩子函数会用到,这里不细说    
+
+#### 写一个正则，根据name取cookie中的值。
+```javascript
+const getCookie = function(name) {
+  let arr;
+  const reg = new RegExp(`(^| )${name}=([^;]*)(;|$)`);
+  if (arr = document.cookie.match(reg)) return unescape(arr[2]);
+  return null;
+}
+new RegExp(`(^| )${name}=([^;]*)(;|$)`)
+```
+
+# 继承
+#### 原型链继承
+```javascript
+function Parent() {
+  this.name = 'parent';
+}
+Parent.prototype.getName = function () {
+    console.log(this.name);
+}
+
+function Child() {
+
+}
+Child.prototype = new Parent();
+var child1 = new Child();
+
+console.log(child1.getName()) 
+```
+问题：   
+1.引用类型的属性被所有实例共享
+```javascript
+var child1 = new Child();
+child1.name = 'yayu';
+console.log(child1.name); // yayu
+
+var child2 = new Child();
+console.log(child2.name); // yayu
+```
+2.在创建 Child 的实例时，不能向Parent传参
+
+#### 经典继承（借用构造函数）
+```javascript
+function Parent() {
+  this.names = ['kevin', 'daisy'];
+}
+
+function Child() {
+  Parent.call(this);
+}
+
+var child1 = new Child();
+child1.names.push('yayu');
+console.log(child1.names); // ["kevin", "daisy", "yayu"]
+
+var child2 = new Child();
+console.log(child2.names); // ["kevin", "daisy"]
+```
+优点：  
+1. 避免了引用类型的属性被所有实例共享
+2. 可以在 Child 中向 Parent 传参
+缺点：  
+1、方法都在构造函数中定义，每次创建实例都会创建一遍方法。
+2、只能继承构造里的信息
+
+#### 组合继承
+原型链继承和经典继承双剑合璧。
+```javascript
+function Parent(name) {
+  this.name = name;
+  this.colors = ['red', 'blue', 'green'];
+}
+Parent.prototype.getName = function () {
+    console.log(this.name)
+}
+
+function Child(name,age) {
+  Parent.call(this,name);
+  this.age = age;
+}
+Child.prototype = new Parent();
+Child.prototype.constructor = Child;
+
+
+var child1 = new Child('kevin', '18');
+child1.colors.push('black');
+console.log(child1.name); // kevin
+console.log(child1.age); // 18
+console.log(child1.colors); // ["red", "blue", "green", "black"]
+
+var child2 = new Child('daisy', '20');
+console.log(child2.name); // daisy
+console.log(child2.age); // 20
+console.log(child2.colors); // ["red", "blue", "green"]
+```
+优点：融合原型链继承和构造函数的优点，是 JavaScript 中最常用的继承模式。  
+
+组合继承最大的缺点是会调用两次父构造函数。
+#### 原型式继承
+就是 ES5 Object.create 的模拟实现，将传入的对象作为创建的对象的原型。
+```javascript
+function createObj(o) {   //传递一个字面量函数
+ function F(){}     //创建一个构造函数
+ F.prototype = o;    //把字面量函数赋值给构造函数的原型
+ return new F()     //最终返回出实例化的构造函数
+}
+var person = {
+    name: 'kevin',
+    friends: ['daisy', 'kelly']
+}
+
+var person1 = createObj(person);
+person1.friends.push('taylor');
+console.log(person1.friends); // ["daisy", "kelly", "taylor"]
+
+
+var person2 = createObj(person);
+console.log(person2.friends); // ["daisy", "kelly", "taylor"]
+```
+缺点：
+包含引用类型的属性值始终都会共享相应的值，这点跟原型链继承一样。
+
+#### 寄生式继承
+创建一个仅用于封装继承过程的函数，该函数在内部以某种形式来做增强对象，最后返回对象。
+```javascript
+function createObj(o) {
+  let clone = Object.create(o);
+  clone.sayName = function() {
+    console.log('hi');  
+  }
+  return clone;
+}
+
+var person = {
+    name: 'kevin',
+    friends: ['daisy', 'kelly']
+}
+
+var person1 = createObj(person);
+person1.friends.push('taylor');
+console.log(person1.friends); // ["daisy", "kelly", "taylor"]
+
+
+var person2 = createObj(person);
+console.log(person2.friends); // ["daisy", "kelly", "taylor"]
+```
+缺点：
+1. 跟借用构造函数模式一样，每次创建对象都会创建一遍方法。
+2. 包含引用类型的属性值始终都会共享相应的值
+
+#### 寄生组合式继承
+```javascript
+function Parent (name) {
+    this.name = name;
+    this.colors = ['red', 'blue', 'green'];
+}
+
+Parent.prototype.getName = function () {
+    console.log(this.name)
+}
+
+function Child(name, age) {
+  Parent.call(this, name);
+  this.age = age;
+}
+
+var F = function() {};
+F.prototype = Parent.prototype
+Child.prototype = new F();
+
+var child1 = new Child('kevin', '18');
+console.log(child1);
+```
+封装一下
+```javascript
+function object(o) {
+  function F() {};
+  F.prototype = o;
+  return new F();
+}
+function prototype(child, parent) {
+  var prototype = object(parent.prototype)
+  prototype.constructor = child;
+  child.prototype = prototype;
+}
+// 当我们使用的时候：
+prototype(Child, Parent);
+```
+
+

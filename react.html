@@ -8,30 +8,46 @@
 </head>
 <body>
 <script type="text/javascript">
-    function normalizeClass(classValue) {
-        // res 是最终要返回的类名字符串
-        let res = ''
-        if (typeof classValue === 'string') {
-        res = classValue
-        } else if (Array.isArray(classValue)) {
-        for (let i = 0; i < classValue.length; i++) {
-            res += normalizeClass(classValue[i]) + ' '
-        }
-        } else if (typeof classValue === 'object') {
-        for (const name in classValue) {
-            if (classValue[name]) {
-            res += name + ' '
-            }
-        }
-        }
-        return res.trim()
-    }
-    const className = [
-        'class-a',
-        ['class-b', 'class-c']
-    ]
-    const res = normalizeClass(className)
-    console.log(res)
+const compose = (...fns) => {
+	return fns.reduce((prevFn, nextFn) => {
+			return value => {
+        return nextFn(prevFn(value))
+      };
+		},
+		value => value
+	)
+};
+
+const arrFn = [
+  () => {console.log(1)},
+  () => {console.log(2)},
+  () => {console.log(3)},
+  () => {console.log(4)},
+  () => {console.log(5)},
+];
+// compose(...arrFn)() 
+// const curry = (fn, ...args) => {
+//   return args.length >= fn.length?fn(...args):(..._args) => curry(fn, ...args, ..._args)
+// }
+// function add1(a,b,c) {
+//   return a+b+c;
+// }
+// const add = curry(add1)
+// console.log(add(1, 2)(1));
+// console.log(add(1)(2)(3));
+// console.log(add(1, 2)(3));
+// console.log(add(1)(2, 3));
+function _instanceof(leftValue, rightValue) {
+  const rightProto = rightValue.prototype;
+  leftValue = leftValue.__proto__;
+  while(true) {
+    if(leftValue === null) return false;
+    if(leftValue === rightProto) return true;
+    leftValue = leftValue.__proto__;
+  }
+}
+
+
 </script>
 </body>
 </html>
