@@ -37,16 +37,6 @@ const arrFn = [
 // console.log(add(1)(2)(3));
 // console.log(add(1, 2)(3));
 // console.log(add(1)(2, 3));
-function _instanceof(leftValue, rightValue) {
-  const rightProto = rightValue.prototype;
-  leftValue = leftValue.__proto__;
-  while(true) {
-    if(leftValue === null) return false;
-    if(leftValue === rightProto) return true;
-    leftValue = leftValue.__proto__;
-  }
-}
-
 
 </script>
 </body>
