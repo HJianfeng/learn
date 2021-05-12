@@ -1,4 +1,4 @@
-[其他文章](https://github.com/HJianfeng/learn/blob/master/article)
+[其他文章](https://github.com/HJianfeng/learn/tree/master/article)
 ## js基础系列
 - [前端基础面试题](https://github.com/HJianfeng/learn/blob/master/article/Interview.md)
 - [call、apply和bind原理和模拟实现](https://github.com/HJianfeng/learn/blob/master/article/Readme2.md)
