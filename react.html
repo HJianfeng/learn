@@ -26,18 +26,36 @@ const arrFn = [
   () => {console.log(5)},
 ];
 // compose(...arrFn)() 
-// const curry = (fn, ...args) => {
-//   return args.length >= fn.length?fn(...args):(..._args) => curry(fn, ...args, ..._args)
-// }
-// function add1(a,b,c) {
-//   return a+b+c;
-// }
-// const add = curry(add1)
-// console.log(add(1, 2)(1));
-// console.log(add(1)(2)(3));
-// console.log(add(1, 2)(3));
-// console.log(add(1)(2, 3));
 
+
+/**
+给你一个整数数组 jobs ，其中 jobs[i] 是完成第 i 项工作要花费的时间。
+
+请你将这些工作分配给 k 位工人。所有工作都应该分配给工人，且每项工作只能分配给一位工人。工人的 工作时间 是完成分配给他们的所有工作花费时间的总和。请你设计一套最佳的工作分配方案，使工人的 最大工作时间 得以 最小化 。
+
+返回分配方案中尽可能 最小 的 最大工作时间 。
+
+*/
+
+var leastBricks = function(wall) {
+  const hash = new WeakMap();
+  for (let i = 0; i < wall.length; i++) {
+    const n = wall[i].length;
+    let sum = 0;
+    // 遍历每一行的砖块
+    for (let j = 0; j < wall[i].length - 1; j++) { // 不遍历最右边的砖块
+      sum += wall[i][j];
+      hash.set(sum, (hash.get(sum) || 0) + 1);
+    }
+  }
+  let maxCount = 0;
+  for (const [key,val] of hash.entries()) {
+    maxCount = Math.max(maxCount, val);
+  }
+  return wall.length - maxCount;
+};
+// var wall = [[1,2,2,1],[3,1,2],[1,3,2],[2,4],[3,1,2],[1,3,1,1]]
+// console.log(leastBricks(wall));
 </script>
 </body>
 </html>
