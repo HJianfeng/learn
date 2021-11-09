@@ -58,6 +58,7 @@ async function mergeChunk(req, res) {
 function handleFormData(req, res) {
   const multipart = new multiparty.Form();
   multipart.parse(req, async (err, fields, files) => {
+    console.log(err, fields, files);
     if(err) return;
     const [chunk] = files.chunk;
     const [hash] = fields.hash;
