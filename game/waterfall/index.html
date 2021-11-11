@@ -1,0 +1,91 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<style>
+.waterfall {
+  position: relative;
+}
+.waterfall-item {
+  position: absolute;
+  width: 300px;
+  height: 100px;
+  background: rgb(236, 146, 10);
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.1s;
+}
+.num {
+  font-size: 18px;
+  color: #fff;
+  border-radius: 100%;
+  width: 25px;
+  height: 25px;
+  line-height:25px;
+  text-align: center;
+  border: 1px solid #fff;
+}
+.btn {
+  text-align: center;
+  font-size: 15px;
+  color: #400eff;
+  cursor: pointer;
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+}
+</style>
+<body>
+<div id="waterfall" class="waterfall">
+</div>
+<script src="./index.js"></script>
+<script>
+var index = 0;
+const waterfall = document.getElementById('waterfall')
+function getData(num = 5) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const fragment = document.createDocumentFragment();
+      for (let i = 0; i < num; i++) {
+        const div = document.createElement('div');
+        const numDiv = document.createElement('div');
+        div.className = 'waterfall-item'
+        numDiv.className = 'num'
+        numDiv.textContent = index + 1;
+        index++
+        div.appendChild(numDiv);
+        div.style.height =  getRandomHeight(4,1)+ 'px'
+        fragment.appendChild(div);
+      }
+      waterfall.appendChild(fragment);
+      resolve()
+    }, 1000)
+  })
+}
+getData(20)
+
+var loading = false;
+window.onscroll = async function() {
+  const scrollTop = document.documentElement.scrollTop; // 滚动条位置
+  const clientHeight = document.documentElement.clientHeight;
+  const scrollHeight = document.body.scrollHeight; // 完整高度
+  if((scrollTop + clientHeight >= scrollHeight) && !loading) {
+    loading = true;
+    await getData();
+    loading = false;
+  }
+}
+
+function getRandomHeight(max = 5, min = 1) {
+  return ((Math.floor(Math.random() * (max-min+1))) + min) * 100
+}
+</script>
+</body>
+</html>
